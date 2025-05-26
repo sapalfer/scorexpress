@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Brain, ShieldAlert, FlaskConical, Activity, Baby, Bone, Ear, Eye, MoreHorizontal, ChevronDown, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug } from 'lucide-react';
-import { Category } from '../data/scores';
+import { Category } from '../data/scores_by_category';
 
 interface CategoryFilterProps {
   selectedCategory: Category | null;

@@ -17,6 +17,69 @@ body {
 }
 
 /* Better mobile experience */
+
+@media print {
+  /* Hide elements not relevant for printing by default */
+  body > header,
+  body > nav,
+  body > aside,
+  body > footer,
+  .app-header, /* Common class for app headers */
+  .sidebar,    /* Common class for sidebars */
+  .main-nav {  /* Common class for main navigation */
+    display: none !important;
+  }
+
+  /* Hide elements specifically marked with .no-print */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Hide everything by default in the body when printing */
+  body > *:not(.printable-content-area) {
+    display: none !important;
+  }
+
+  /* Make the printable-content-area take up the whole screen */
+  .printable-content-area {
+    display: block !important; /* Ensure it's displayed */
+    width: 100% !important;
+    height: 100vh !important; /* Full viewport height */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 1em !important; /* Add some padding for the content itself */
+    border: none !important;
+    box-shadow: none !important;
+    background-color: #fff !important; /* Ensure white background */
+  }
+
+  /* If .printable-content-area is nested, ensure its parents don't clip it */
+  body, html, #root, #root > div, main {
+    display: block !important; /* Ensure containers are blocks */
+    overflow: visible !important; /* Prevent clipping */
+    height: auto !important; /* Adjust height */
+    background-color: #fff !important; /* Ensure white background for parents too */
+  }
+
+  /* Ensure background colors and images are printed (some browsers disable by default) */
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove any page-specific margins or padding that might interfere */
+  @page {
+    margin: 0.5in; /* Adjust as needed, or set to 0 */
+  }
+
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #fff !important; /* Ensure white background */
+  }
+}
 @media (max-width: 640px) {
   html {
     -webkit-tap-highlight-color: transparent;

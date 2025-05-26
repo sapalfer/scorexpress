@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Heart, Brain, Activity, MoreHorizontal, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug, FlaskConical, Baby, Bone, Ear, Eye, ShieldAlert } from 'lucide-react'; // Removed Stethoscope
-import { Score } from '../types';
-import { Category } from '../data/scores';
+import { Score, Category } from '../data/scores_by_category';
 
 interface ScoreCardProps {
   score: Score;

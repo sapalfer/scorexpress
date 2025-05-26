@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const { isMenuOpen, setIsMenuOpen } = useAppContext();
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-10">
+    <header className="bg-white shadow-md sticky top-0 z-10 no-print">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <HeartPulse className="text-blue-500" size={24} />

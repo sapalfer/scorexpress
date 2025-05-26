@@ -14,10 +14,10 @@ const ScoreDetail: React.FC<ScoreDetailProps> = ({ score }) => {
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-5 md:p-8">
+    <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-5 md:p-8 printable-content-area">
       <div className="flex items-center mb-6">
         <button 
-          className="mr-3 text-gray-600 hover:text-blue-500 transition-colors"
+          className="mr-3 text-gray-600 hover:text-blue-500 transition-colors no-print"
           onClick={() => navigate(-1)}
         >
           <ChevronLeft size={24} />

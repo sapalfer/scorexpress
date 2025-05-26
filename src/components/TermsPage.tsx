@@ -28,8 +28,12 @@ const TermsPage: React.FC = () => {
         <p>
           Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment. Les modifications prendront effet dès leur publication sur le site.
         </p>
+        <h2 className="text-2xl font-semibold mt-6 mb-3">5. Vie Privée et Données Personnelles</h2>
+        <p>
+          Votre vie privée est importante pour nous. L'utilisation de ScoreXpress est également régie par notre <a href="/privacy" className="text-blue-600 hover:underline">Politique de Confidentialité</a>, qui décrit comment nous collectons, utilisons et protégeons vos informations. En utilisant ce site, vous consentez aux pratiques de données décrites dans la Politique de Confidentialité.
+        </p>
         <p className="mt-8">
-          <em>Dernière mise à jour : [Date de la dernière mise à jour]</em>
+          <em>Dernière mise à jour : 26 mai 2025</em>
         </p>
       </div>
     </div>

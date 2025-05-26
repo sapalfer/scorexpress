@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { ScoreResult } from '../types';
-import { Share2 } from 'lucide-react';
+import { Printer } from 'lucide-react'; // Changed from Share2 to Printer
 
 interface ScoreRecapProps {
   scoreResult: ScoreResult;
 }
 
 const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult }) => {
-  const [shareMessage, setShareMessage] = useState<string>('');
 
   const getInterpretationColor = (): string => {
     const level = scoreResult.interpretation.level.toLowerCase();
@@ -18,25 +17,8 @@ const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult }) => {
     return 'bg-gray-100 text-gray-800'; 
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: 'Résultat de Score Médical',
-      text: `Mon score est de ${scoreResult.value}. Interprétation: ${scoreResult.interpretation.text}`,
-    };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        setShareMessage('Résultat partagé avec succès!');
-      } else {
-        navigator.clipboard.writeText(`${shareData.title}\n${shareData.text}`);
-        setShareMessage('Résultat copié dans le presse-papiers!');
-      }
-      setTimeout(() => setShareMessage(''), 3000); 
-    } catch (err) {
-      console.error('Error sharing:', err);
-      setShareMessage('Erreur lors du partage.');
-      setTimeout(() => setShareMessage(''), 3000);
-    }
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
@@ -50,18 +32,14 @@ const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult }) => {
           </div>
         </div>
         <button
-          onClick={handleShare}
-          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          onClick={handlePrint}
+          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors no-print"
         >
-          <Share2 size={16} className="mr-2" />
-          Partager
+          <Printer size={16} className="mr-2" />
+          Imprimer
         </button>
       </div>
-      {shareMessage && (
-        <div className="text-green-600 text-sm animation-fade-in">
-          {shareMessage}
-        </div>
-      )}
+
     </div>
   );
 };
