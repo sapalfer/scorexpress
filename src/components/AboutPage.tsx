@@ -17,22 +17,58 @@ const AboutPage: React.FC = () => {
         <div className="grid md:grid-cols-3 gap-8 text-center">
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold text-blue-600 mb-3">Rapidité Maximale</h3>
-            <p className="text-gray-600">
-              Obtenez des résultats instantanément. Plus de calculs manuels fastidieux, plus de temps perdu.
-            </p>
           </div>
+          {/* Assuming there are two more similar divs for the grid here based on md:grid-cols-3 */}
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold text-blue-600 mb-3">Fiabilité Garantie</h3>
-            <p className="text-gray-600">
-              Accédez à des scores validés et reconnus, pour des décisions éclairées et sécurisées.
-            </p>
+            {/* Placeholder content - adjust as needed */}
+            <p className="text-gray-600">Des scores validés et reconnus par la communauté médicale.</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-            <h3 className="text-xl font-semibold text-blue-600 mb-3">Interface Intuitive</h3>
-            <p className="text-gray-600">
-              Une expérience utilisateur soignée, conçue par et pour les professionnels de santé.
-            </p>
+            <h3 className="text-xl font-semibold text-blue-600 mb-3">Accessibilité Universelle</h3>
+            {/* Placeholder content - adjust as needed */}
+            <p className="text-gray-600">Disponible sur tous vos appareils, à tout moment.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-gray-700 mb-6 text-center">Accès Rapide sur Votre Mobile</h2>
+        <div className="bg-white p-8 rounded-lg shadow-lg text-gray-700">
+          <p className="mb-4 text-lg">
+            Pour un accès encore plus rapide à ScoreXpress, vous pouvez ajouter l'application directement à l'écran d'accueil de votre téléphone. Elle fonctionnera comme une application native !
+          </p>
+          
+          <img 
+            src="/assets/images/add-to-homescreen-guide.png" 
+            alt="Guide pour ajouter ScoreXpress à l'écran d'accueil" 
+            className="mx-auto my-6 rounded-md shadow-md border" 
+            style={{ maxWidth: '500px', width: '100%' }} 
+          />
+
+          <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
+            <div>
+              <h3 className="text-xl font-semibold text-blue-600 mb-3">Sur iOS (iPhone/iPad) :</h3>
+              <ol className="list-decimal list-inside space-y-2 text-gray-600">
+                <li>Ouvrez ScoreXpress dans <strong>Safari</strong>.</li>
+                <li>Appuyez sur l'icône de <strong>Partage</strong> (un carré avec une flèche vers le haut en bas de l'écran).</li>
+                <li>Faites défiler vers le bas et sélectionnez "<strong>Sur l'écran d'accueil</strong>".</li>
+                <li>Confirmez le nom (par défaut "ScoreXpress") et appuyez sur "<strong>Ajouter</strong>".</li>
+              </ol>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-blue-600 mb-3">Sur Android :</h3>
+              <ol className="list-decimal list-inside space-y-2 text-gray-600">
+                <li>Ouvrez ScoreXpress dans <strong>Chrome</strong> (ou votre navigateur Android principal).</li>
+                <li>Appuyez sur l'icône du <strong>menu</strong> (souvent trois points verticaux en haut à droite).</li>
+                <li>Sélectionnez "<strong>Installer l'application</strong>" ou "<strong>Ajouter à l'écran d'accueil</strong>".</li>
+                <li>Suivez les instructions pour confirmer.</li>
+              </ol>
+            </div>
+          </div>
+          <p className="mt-8 text-sm text-center text-gray-500">
+            Et voilà ! ScoreXpress sera accessible comme n'importe quelle autre application sur votre téléphone, directement depuis votre écran d'accueil.
+          </p>
         </div>
       </section>
 
