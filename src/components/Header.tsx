@@ -9,10 +9,10 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-10 no-print">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2">
           <HeartPulse className="text-blue-500" size={24} />
           <h1 className="text-xl font-bold text-blue-600">ScoreXpress</h1>
-        </div>
+        </Link>
         
         <div className="hidden md:flex items-center space-x-6">
           <Link to="/" className="text-gray-600 hover:text-blue-500 transition-colors">
