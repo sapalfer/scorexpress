@@ -7,9 +7,10 @@ import ScoreRecap from './ScoreRecap';
 
 interface ScoreDetailProps {
   score: Score;
+  allScores: Score[];
 }
 
-const ScoreDetail: React.FC<ScoreDetailProps> = ({ score }) => {
+const ScoreDetail: React.FC<ScoreDetailProps> = ({ score, allScores }) => {
   const navigate = useNavigate();
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
 
@@ -47,6 +48,19 @@ const ScoreDetail: React.FC<ScoreDetailProps> = ({ score }) => {
       {scoreResult && (
         <ScoreRecap scoreResult={scoreResult} />
       )}
+
+      {/* Related Scores Section */}
+      <div className="mt-10">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3">Autres scores dans la catégorie {score.category.charAt(0).toUpperCase() + score.category.slice(1)}</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {allScores.filter(s => s.category === score.category && s.id !== score.id).slice(0, 4).map(rel => (
+            <a key={rel.id} href={`/score/${rel.id}`} className="block p-4 bg-gray-50 rounded shadow hover:bg-blue-50 transition-colors">
+              <div className="font-bold text-blue-700">{rel.name}</div>
+              <div className="text-gray-600 text-sm mt-1 line-clamp-2">{rel.description}</div>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

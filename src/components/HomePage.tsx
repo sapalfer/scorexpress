@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getAllScores, getScoresForCategory, Score, Category } from '../data/scores_by_category';
 import SearchBar from './SearchBar';
@@ -8,10 +9,20 @@ import ScoreCard from './ScoreCard';
 const SCORES_PER_PAGE = 9;
 
 const HomePage: React.FC = () => {
+  const location = useLocation();
   const [scoresToDisplay, setScoresToDisplay] = useState<Score[]>([]);
   const [isLoadingScores, setIsLoadingScores] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+  // On mount and when location changes, set category from query string
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    if (cat && Object.values(Category).includes(cat as Category)) {
+      setSelectedCategory(cat as Category);
+    }
+  }, [location.search]);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
@@ -93,7 +104,47 @@ const HomePage: React.FC = () => {
       <Helmet>
         <title>Accueil - ScoreXpress | Calculateur de Scores Médicaux</title>
         <meta name="description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
-        {/* <link rel="canonical" href="https://yourdomain.com/" /> */}
+        {/* Open Graph for homepage */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Accueil - ScoreXpress | Calculateur de Scores Médicaux" />
+        <meta property="og:description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
+        <meta property="og:url" content="https://scorexp.netlify.app/" />
+        <meta property="og:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
+        {/* Twitter Card for homepage */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Accueil - ScoreXpress | Calculateur de Scores Médicaux" />
+        <meta name="twitter:description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
+        <meta name="twitter:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
+        <link rel="canonical" href="https://scorexp.netlify.app/" />
+        <script type="application/ld+json">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://scorexp.netlify.app/#website",
+              "name": "ScoreXpress",
+              "url": "https://scorexp.netlify.app/",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://scorexp.netlify.app/?search={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "name": "Accueil - ScoreXpress | Calculateur de Scores Médicaux",
+              "description": "Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser.",
+              "url": "https://scorexp.netlify.app/",
+              "isPartOf": {
+                "@id": "https://scorexp.netlify.app/#website"
+              }
+            }
+          ])}
+        </script>
       </Helmet>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Scores Médicaux</h1>

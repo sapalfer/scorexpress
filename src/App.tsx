@@ -67,10 +67,45 @@ const ScoreDetailWrapper: React.FC<{ scores: Score[], isLoading: boolean }> = ({
       <Helmet>
         <title>{`${score.name} - ScoreXpress`}</title>
         <meta name="description" content={score.description.substring(0, 160)} /> {/* Truncate for meta description */}
+        {/* Open Graph and Twitter Card for score page */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${score.name} - ScoreXpress`} />
+        <meta property="og:description" content={score.description.substring(0, 160)} />
+        <meta property="og:url" content={`https://scorexp.netlify.app/score/${score.id}`} />
+        <meta property="og:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${score.name} - ScoreXpress`} />
+        <meta name="twitter:description" content={score.description.substring(0, 160)} />
+        <meta name="twitter:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
         <link rel="canonical" href={`https://scorexp.netlify.app/score/${score.id}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": score.name,
+            "description": score.description,
+            "url": `https://scorexp.netlify.app/score/${score.id}`,
+            "author": {
+              "@type": "Organization",
+              "name": "ScoreXpress"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "ScoreXpress",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://scorexp.netlify.app/apple-touch-icon.png"
+              }
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://scorexp.netlify.app/score/${score.id}`
+            }
+          })}
+        </script>
       </Helmet>
       <div className="py-6">
-      <ScoreDetail score={score} />
+      <ScoreDetail score={score} allScores={scores} />
     </div>
     </>
   );
@@ -115,6 +150,26 @@ const AppContent: React.FC<{ gaInitialized: boolean }> = ({ gaInitialized }) => 
       <Helmet>
         <title>ScoreXpress - Medical Score Calculator</title>
         <meta name="description" content="Your go-to platform for quick and accurate medical score calculations. Explore various calculators for different specialties." />
+        {/* Open Graph defaults */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="ScoreXpress - Medical Score Calculator" />
+        <meta property="og:description" content="Your go-to platform for quick and accurate medical score calculations. Explore various calculators for different specialties." />
+        <meta property="og:url" content="https://scorexp.netlify.app/" />
+        <meta property="og:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
+        {/* Twitter Card defaults */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ScoreXpress - Medical Score Calculator" />
+        <meta name="twitter:description" content="Your go-to platform for quick and accurate medical score calculations. Explore various calculators for different specialties." />
+        <meta name="twitter:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "ScoreXpress",
+            "url": "https://scorexp.netlify.app/",
+            "logo": "https://scorexp.netlify.app/apple-touch-icon.png"
+          })}
+        </script>
       </Helmet>
       <Header />
       <main className="flex-grow container mx-auto px-4">

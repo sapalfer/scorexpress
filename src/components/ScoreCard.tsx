@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Heart, Brain, Activity, MoreHorizontal, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug, FlaskConical, Baby, Bone, Ear, Eye, ShieldAlert } from 'lucide-react'; // Removed Stethoscope
 import { Score, Category } from '../data/scores_by_category';
 
@@ -8,6 +8,14 @@ interface ScoreCardProps {
 }
 
 const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    navigate(`/?category=${score.category}`);
+  };
+
   const getCategoryIcon = () => {
     switch (score.category) {
       case Category.URGENCE:
@@ -117,7 +125,14 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center">
               {getCategoryIcon()}
-              <span className={`ml-2 text-sm font-medium px-2 py-1 rounded-full ${getCategoryColor()}`}>
+              <span
+                className={`ml-2 text-sm font-medium px-2 py-1 rounded-full underline text-blue-700 cursor-pointer ${getCategoryColor()}`}
+                onClick={handleCategoryClick}
+                title={`Voir tous les scores de la catégorie ${score.category.charAt(0).toUpperCase() + score.category.slice(1)}`}
+                tabIndex={0}
+                role="button"
+                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCategoryClick(e as any)}
+              >
                 {score.category.charAt(0).toUpperCase() + score.category.slice(1)}
               </span>
             </div>
