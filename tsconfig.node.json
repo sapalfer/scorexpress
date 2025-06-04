@@ -1,23 +1,38 @@
 {
   "compilerOptions": {
-    "composite": true,
+    // "composite": true, // Removed for simplicity, may not be needed for scripts
     "target": "ES2022",
-    "lib": ["ES2023"],
-    "module": "ESNext",
+    "lib": ["ES2023"], // Existing value, fine for modern Node
+    "module": "ESNext", // Existing value, correct for ESM
     "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true, // Existing value, good for modern resolution
+    "resolveJsonModule": true,     // Good practice to allow importing JSON files
+    "isolatedModules": true,       // Existing value
+    "moduleDetection": "force",    // Existing value, ensures files are treated as modules
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    // "emitDeclarationOnly": true, // REMOVED - ts-node needs to execute code
+    "noEmit": true                 // ADDED - ts-node handles in-memory compilation
   },
-  "include": ["vite.config.ts"]
+  "ts-node": {
+    // ADDED - ts-node specific configuration
+    "esm": true, // Crucial for projects with "type": "module"
+    "experimentalSpecifierResolution": "node" // Helps ts-node resolve imports without extensions in ESM
+  },
+  "include": [
+    "vite.config.ts",      // Keep existing
+    "scripts/**/*.ts"      // ADDED - Include our sitemap script
+  ],
+  "exclude": [             // ADDED - Good practice for clarity
+    "node_modules",
+    "dist",
+    "src"                  // 'src' is handled by the main tsconfig.json
+  ]
 }

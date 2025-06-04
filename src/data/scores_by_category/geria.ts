@@ -1,5 +1,5 @@
 // src/data/scores_by_category/geria.ts
-import { Score, Category, ScoreInterpretation } from '../score_types';
+import { Score, Category, ScoreInterpretation } from '../score_types.ts';
 // Note: GDS-15 has a custom calculation logic, so createCalculationFunction might not be directly used if it's too generic.
 
 export const geriaScores: Score[] = [

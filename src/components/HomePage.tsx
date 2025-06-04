@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { getAllScores, getScoresForCategory, Score, Category } from '../data/scores_by_category';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
@@ -89,6 +90,11 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      <Helmet>
+        <title>Accueil - ScoreXpress | Calculateur de Scores Médicaux</title>
+        <meta name="description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
+        {/* <link rel="canonical" href="https://yourdomain.com/" /> */}
+      </Helmet>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Scores Médicaux</h1>
         <p className="text-gray-600">

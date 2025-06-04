@@ -1,8 +1,14 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const PrivacyPolicyPage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animation-fade-in">
+      <Helmet>
+        <title>Politique de Confidentialité - ScoreXpress</title>
+        <meta name="description" content="Consultez la politique de confidentialité de ScoreXpress. Nous expliquons quelles données nous collectons, comment nous les utilisons, et comment nous protégeons votre vie privée." />
+        <link rel="canonical" href="https://scorexp.netlify.app/privacy" />
+      </Helmet>
       <header className="mb-10 text-center">
         <h1 className="text-4xl font-extrabold text-gray-800 mb-3">
           Politique de Confidentialité

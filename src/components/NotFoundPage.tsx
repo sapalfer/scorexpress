@@ -1,9 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const NotFoundPage: React.FC = () => {
   return (
     <div className="min-h-[calc(100vh-200px)] flex flex-col items-center justify-center text-center px-4 animation-fade-in">
+      <Helmet>
+        <title>Page Non Trouvée - ScoreXpress</title>
+        <meta name="description" content="Désolé, la page que vous recherchez n'existe pas ou a été déplacée sur ScoreXpress." />
+        <meta name="robots" content="noindex" /> {/* Tell search engines not to index this page */}
+      </Helmet>
       <h1 className="text-6xl font-extrabold text-red-500 mb-4">404</h1>
       <h2 className="text-3xl font-semibold text-gray-800 mb-3">Page Non Trouvée</h2>
       <p className="text-lg text-gray-600 mb-8">

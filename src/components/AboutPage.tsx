@@ -1,8 +1,14 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const AboutPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 animation-fade-in">
+      <Helmet>
+        <title>À Propos de ScoreXpress - Votre Partenaire Décisionnel en Santé</title>
+        <meta name="description" content="Découvrez ScoreXpress, l'outil conçu pour simplifier la pratique clinique des professionnels de santé avec des scores médicaux rapides, fiables et accessibles." />
+        <link rel="canonical" href="https://scorexp.netlify.app/about" />
+      </Helmet>
       <header className="mb-12 text-center">
         <h1 className="text-5xl font-extrabold text-gray-800 mb-4">
           ScoreXpress: Votre Partenaire Décisionnel en Santé

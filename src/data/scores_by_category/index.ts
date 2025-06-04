@@ -1,6 +1,6 @@
 // src/data/scores_by_category/index.ts
-import type { Score, ScoreCriterion, CriterionOption, ScoreInterpretation, CalculationFunction, InterpretationFunction } from '../score_types';
-import { Category } from '../score_types'; // Import Category enum directly
+import type { Score, ScoreCriterion, CriterionOption, ScoreInterpretation, CalculationFunction, InterpretationFunction } from '../score_types.ts';
+import { Category } from '../score_types.ts'; // Import Category enum directly
 
 // Re-export Category enum and other relevant types
 export { Category }; // Make sure Category is exported from score_types.ts
@@ -9,23 +9,23 @@ export type { Score, ScoreCriterion, CriterionOption, ScoreInterpretation, Calcu
 export const getScoresForCategory = async (category: Category): Promise<Score[]> => {
   switch (category) {
     case Category.CARDIO:
-      return (await import('./cardio')).cardioScores;
+      return (await import('./cardio.ts')).cardioScores;
     case Category.GASTRO:
-      return (await import('./gastro')).gastroScores;
+      return (await import('./gastro.ts')).gastroScores;
     case Category.GERIA:
-      return (await import('./geria')).geriaScores;
+      return (await import('./geria.ts')).geriaScores;
     case Category.NEURO:
-      return (await import('./neuro')).neuroScores;
+      return (await import('./neuro.ts')).neuroScores;
     case Category.PED:
-      return (await import('./ped')).pedScores;
+      return (await import('./ped.ts')).pedScores;
     case Category.PNEUMO:
-      return (await import('./pneumo')).pneumoScores;
+      return (await import('./pneumo.ts')).pneumoScores;
     case Category.PSY:
-      return (await import('./psy')).psyScores;
+      return (await import('./psy.ts')).psyScores;
     case Category.REA:
-      return (await import('./rea')).reaScores;
+      return (await import('./rea.ts')).reaScores;
     case Category.URGENCE:
-      return (await import('./urgence')).urgenceScores;
+      return (await import('./urgence.ts')).urgenceScores;
     // Add cases for other categories if they have dedicated files
     // e.g., CHIRURGIE, INFECTO, HEMA, NEPHRO, GYNECO, ENDO, ONCO, DERMA, RHUMA, URO, ORL, OPHTA, AUTRES
     // For now, unhandled categories will return an empty array implicitly by falling through.

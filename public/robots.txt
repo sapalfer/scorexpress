@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://scorexp.netlify.app/sitemap.xml

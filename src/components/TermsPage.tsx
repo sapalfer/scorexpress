@@ -1,8 +1,14 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const TermsPage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 animation-fade-in">
+      <Helmet>
+        <title>Conditions d'Utilisation - ScoreXpress</title>
+        <meta name="description" content="Consultez les conditions d'utilisation de ScoreXpress. En utilisant notre site et nos calculateurs de scores médicaux, vous acceptez ces termes." />
+        <link rel="canonical" href="https://scorexp.netlify.app/terms" />
+      </Helmet>
       <header className="mb-10 text-center">
         <h1 className="text-4xl font-extrabold text-gray-800 mb-3">
           Conditions d'utilisation

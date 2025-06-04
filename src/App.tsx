@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'; // Added useState & useEffect
+import { Helmet } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, useParams, Navigate, Link, useLocation } from 'react-router-dom'; // Added useLocation
 import ReactGA from 'react-ga4'; // Added ReactGA
 import CookieConsent from "react-cookie-consent"; // Added CookieConsent
@@ -46,19 +47,32 @@ const ScoreDetailWrapper: React.FC<{ scores: Score[], isLoading: boolean }> = ({
   }
   if (!score) {
     return (
-      <div className="py-6 text-center">
+      <>
+        <Helmet>
+          <title>Score Non Trouvé - ScoreXpress</title>
+          <meta name="description" content={`Le score avec l'identifiant '${scoreId}' n'a pas été trouvé sur ScoreXpress.`} />
+        </Helmet>
+        <div className="py-6 text-center">
         <p className="text-xl text-red-600">Score non trouvé.</p>
         <p className="mt-2 text-gray-600">L'identifiant '{scoreId}' ne correspond à aucun score connu.</p>
         <Link to="/" className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
           Retour à l'accueil
         </Link>
       </div>
+      </>
     );
   }
   return (
-    <div className="py-6">
+    <>
+      <Helmet>
+        <title>{`${score.name} - ScoreXpress`}</title>
+        <meta name="description" content={score.description.substring(0, 160)} /> {/* Truncate for meta description */}
+        <link rel="canonical" href={`https://scorexp.netlify.app/score/${score.id}`} />
+      </Helmet>
+      <div className="py-6">
       <ScoreDetail score={score} />
     </div>
+    </>
   );
 };
 
@@ -98,6 +112,10 @@ const AppContent: React.FC<{ gaInitialized: boolean }> = ({ gaInitialized }) => 
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Helmet>
+        <title>ScoreXpress - Medical Score Calculator</title>
+        <meta name="description" content="Your go-to platform for quick and accurate medical score calculations. Explore various calculators for different specialties." />
+      </Helmet>
       <Header />
       <main className="flex-grow container mx-auto px-4">
         <TrackPageViews gaInitialized={gaInitialized} />

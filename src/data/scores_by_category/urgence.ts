@@ -1,6 +1,6 @@
 // src/data/scores_by_category/urgence.ts
-import { Score, Category, ScoreInterpretation } from '../score_types';
-import { createCalculationFunction } from '../score_helpers';
+import { Score, Category, ScoreInterpretation } from '../score_types.ts';
+import { createCalculationFunction } from '../score_helpers.ts';
 
 export const urgenceScores: Score[] = [
   {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 interface FormData {
   name: string;
@@ -94,6 +95,11 @@ const ContactPage: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 animation-fade-in">
+      <Helmet>
+        <title>Contactez ScoreXpress - Retours et Questions</title>
+        <meta name="description" content="Contactez l'équipe ScoreXpress pour toute question, suggestion de fonctionnalité, ou pour signaler un bug. Vos retours nous aident à améliorer notre calculateur de scores médicaux." />
+        <link rel="canonical" href="https://scorexp.netlify.app/contact" />
+      </Helmet>
       <header className="mb-10 text-center">
         <h1 className="text-4xl font-extrabold text-gray-800 mb-3">
           Contactez-nous
