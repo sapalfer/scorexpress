@@ -26,6 +26,8 @@ export const getScoresForCategory = async (category: Category): Promise<Score[]>
       return (await import('./rea.ts')).reaScores;
     case Category.URGENCE:
       return (await import('./urgence.ts')).urgenceScores;
+    case Category.NUTRITION:
+      return (await import('./nutrition.ts')).nutritionScores;
     // Add cases for other categories if they have dedicated files
     // e.g., CHIRURGIE, INFECTO, HEMA, NEPHRO, GYNECO, ENDO, ONCO, DERMA, RHUMA, URO, ORL, OPHTA, AUTRES
     // For now, unhandled categories will return an empty array implicitly by falling through.
@@ -47,6 +49,7 @@ export const getAllScores = async (): Promise<Score[]> => {
     Category.PSY,
     Category.REA,
     Category.URGENCE,
+    Category.NUTRITION,
     // Add other Category enum members here if they have corresponding files
   ];
 

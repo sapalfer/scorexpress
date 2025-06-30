@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getAllScores, getScoresForCategory, Score, Category } from '../data/scores_by_category';
 import SearchBar from './SearchBar';
@@ -10,10 +10,28 @@ const SCORES_PER_PAGE = 9;
 
 const HomePage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const [allScoresForSearch, setAllScoresForSearch] = useState<Score[]>([]);
   const [scoresToDisplay, setScoresToDisplay] = useState<Score[]>([]);
   const [isLoadingScores, setIsLoadingScores] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState<Score[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+  // On mount, fetch ALL scores for the search functionality
+  useEffect(() => {
+    const fetchAllScoresForSearch = async () => {
+      try {
+        const allScores = await getAllScores();
+        setAllScoresForSearch(allScores);
+      } catch (error) {
+        console.error("Failed to load all scores for search:", error);
+      }
+    };
+    fetchAllScoresForSearch();
+  }, []);
 
   // On mount and when location changes, set category from query string
   useEffect(() => {
@@ -21,10 +39,14 @@ const HomePage: React.FC = () => {
     const cat = params.get('category');
     if (cat && Object.values(Category).includes(cat as Category)) {
       setSelectedCategory(cat as Category);
+    } else {
+      setSelectedCategory(null);
     }
   }, [location.search]);
+
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch scores for display based on selected category
   useEffect(() => {
     const fetchScores = async () => {
       setIsLoadingScores(true);
@@ -36,10 +58,10 @@ const HomePage: React.FC = () => {
           fetchedScores = await getAllScores();
         }
         setScoresToDisplay(fetchedScores);
-        setCurrentPage(1); // Reset to first page when category or scores change
+        setCurrentPage(1);
       } catch (error) {
         console.error("Failed to load scores:", error);
-        setScoresToDisplay([]); // Set to empty on error
+        setScoresToDisplay([]);
       } finally {
         setIsLoadingScores(false);
       }
@@ -48,11 +70,36 @@ const HomePage: React.FC = () => {
     fetchScores();
   }, [selectedCategory]);
 
+  // Generate autocomplete suggestions
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setSuggestions([]);
+      return;
+    }
+    const filtered = allScoresForSearch.filter(score =>
+      score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (score.shortName && score.shortName.toLowerCase().includes(searchTerm.toLowerCase()))
+    ).slice(0, 5);
+    setSuggestions(filtered);
+  }, [searchTerm, allScoresForSearch]);
+
+  // Handle clicking outside to close suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const filteredScores = useMemo(() => {
     return scoresToDisplay.filter(score => {
       const matchesSearch = score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            score.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
       return matchesSearch;
     });
   }, [scoresToDisplay, searchTerm]);
@@ -72,23 +119,21 @@ const HomePage: React.FC = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
+  const handleSuggestionClick = (scoreId: string) => {
+    navigate(`/score/${scoreId}`);
+    setSearchTerm('');
+    setSuggestions([]);
+  };
+
   let content;
   if (isLoadingScores) {
     content = <div className="py-6 text-center"><p className="text-xl text-gray-700">Chargement des scores...</p></div>;
   } else if (scoresToDisplay.length === 0 && !selectedCategory) {
-    // This case means getAllScores returned empty, or an error occurred
     content = <p className="text-center text-gray-500">Aucun score disponible pour le moment.</p>;
-  } else if (scoresToDisplay.length > 0 && filteredScores.length === 0 && searchTerm !== '') {
-    // Scores for category are loaded, but search term yields no results
+  } else if (filteredScores.length === 0 && searchTerm !== '' && suggestions.length === 0) {
     content = <p className="text-center text-gray-500">Aucun score trouvé pour "{searchTerm}"{selectedCategory ? ` dans la catégorie ${selectedCategory}` : ''}.</p>;
   } else if (scoresToDisplay.length === 0 && selectedCategory) {
-    // No scores found for the specific selected category
     content = <p className="text-center text-gray-500">Aucun score disponible pour la catégorie {selectedCategory}.</p>;
-  } else if (filteredScores.length === 0 && searchTerm === '') {
-    // This case implies scoresToDisplay might have items, but after default filtering (which is now minimal as category is handled by fetch)
-    // it results in zero. This might happen if a category was selected, scores were fetched, then category deselected and searchTerm is empty.
-    // Or if scoresToDisplay was empty from the start for 'All Categories'.
-    content = <p className="text-center text-gray-500">Aucun score à afficher.</p>;
   } else {
     content = (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -104,13 +149,11 @@ const HomePage: React.FC = () => {
       <Helmet>
         <title>Accueil - ScoreXpress | Calculateur de Scores Médicaux</title>
         <meta name="description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
-        {/* Open Graph for homepage */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Accueil - ScoreXpress | Calculateur de Scores Médicaux" />
         <meta property="og:description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
         <meta property="og:url" content="https://scorexp.netlify.app/" />
         <meta property="og:image" content="https://scorexp.netlify.app/apple-touch-icon.png" />
-        {/* Twitter Card for homepage */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Accueil - ScoreXpress | Calculateur de Scores Médicaux" />
         <meta name="twitter:description" content="Trouvez et utilisez une vaste gamme de calculateurs de scores médicaux sur ScoreXpress. Simplifiez votre pratique clinique avec des outils précis et faciles à utiliser." />
@@ -153,8 +196,13 @@ const HomePage: React.FC = () => {
         </p>
       </div>
       
-      <div className="mb-6">
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <div className="mb-6" ref={searchContainerRef}>
+        <SearchBar 
+          searchTerm={searchTerm} 
+          setSearchTerm={setSearchTerm} 
+          suggestions={suggestions}
+          onSuggestionClick={handleSuggestionClick}
+        />
       </div>
       
       <CategoryFilter 

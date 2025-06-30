@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScoreResult } from '../types';
-import { Printer } from 'lucide-react'; // Changed from Share2 to Printer
+import { Printer } from 'lucide-react';
+import PdfTools from './PdfTools';
 
 interface ScoreRecapProps {
   scoreResult: ScoreResult;
+  scoreName: string;
 }
 
-const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult }) => {
+const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult, scoreName }) => {
 
   const getInterpretationColor = (): string => {
     const level = scoreResult.interpretation.level.toLowerCase();
@@ -31,14 +33,22 @@ const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult }) => {
             {scoreResult.interpretation.text}
           </div>
         </div>
-        <button
-          onClick={handlePrint}
-          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors no-print"
-        >
-          <Printer size={16} className="mr-2" />
-          Imprimer
-        </button>
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 no-print">
+          <button
+            onClick={handlePrint}
+            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            <Printer size={16} className="mr-2" />
+            Imprimer
+          </button>
+          <PdfTools 
+            scoreName={scoreName}
+            scoreValue={scoreResult.value}
+            interpretation={scoreResult.interpretation.text}
+          />
+        </div>
       </div>
+
 
     </div>
   );

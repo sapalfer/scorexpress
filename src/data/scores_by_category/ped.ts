@@ -126,11 +126,30 @@ export const pedScores: Score[] = [
         defaultValue: 0,
       },
     ],
-    calculation: () => 0, // Tanner stages are descriptive; a summary score is not standard.
-    interpretation: (): ScoreInterpretation => ({ 
-      level: 'normal', // Placeholder, actual interpretation depends on context and individual stages.
-      text: 'Les stades de Tanner décrivent le développement pubertaire. Chaque critère est évalué séparément. Consulter les descriptions détaillées pour chaque stade.'
-    }),
+    calculation: (values: number[]): number => {
+      // This score is descriptive, so we return a placeholder value.
+      // The real logic is in the interpretation.
+      return values.reduce((a, b) => a + b, 0); // Sum for uniqueness, though not clinically used.
+    },
+    interpretation: (_: number, values?: number[]): ScoreInterpretation => {
+      if (!values || values.length < 3) {
+        return { level: 'abnormal', text: 'Données invalides.' };
+      }
+      const [pubicHair, breast, genital] = values;
+      const parts = [];
+      if (pubicHair > 0) parts.push(`Pilosité: Stade ${pubicHair}`);
+      if (breast > 0) parts.push(`Seins: Stade ${breast}`);
+      if (genital > 0) parts.push(`Génital: Stade ${genital}`);
+      
+      if (parts.length === 0) {
+        return { level: 'normal', text: 'Aucun stade sélectionné.' };
+      }
+
+      return { 
+        level: 'normal',
+        text: `Stades sélectionnés: ${parts.join(', ')}. L\'évaluation est descriptive.`
+      };
+    },
     source: 'Marshall WA, Tanner JM. Variations in pattern of pubertal changes in girls. Arch Dis Child. 1969 Jun;44(235):291-303. AND Marshall WA, Tanner JM. Variations in the pattern of pubertal changes in boys. Arch Dis Child. 1970 Feb;45(239):13-23.',
     moreInfoLink: 'https://en.wikipedia.org/wiki/Tanner_scale',
     notes: 'Évaluation descriptive basée sur l\'observation clinique. Les options ont été détaillées pour une meilleure compréhension.',

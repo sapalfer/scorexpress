@@ -4,6 +4,124 @@ import { Score, Category, ScoreInterpretation } from '../score_types.ts';
 
 export const geriaScores: Score[] = [
   {
+    id: 'iadl',
+    name: 'Échelle d\'Autonomie Instrumentale (IADL de Lawton)',
+    shortName: 'IADL',
+    category: Category.GERIA,
+    description: "Évalue la capacité d'une personne âgée à effectuer les activités instrumentales de la vie quotidienne, nécessaires pour vivre de façon autonome à domicile.",
+    criteria: [
+      { 
+        id: 'telephone', 
+        name: 'Capacité à utiliser le téléphone', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Utilise le téléphone de sa propre initiative, cherche et compose les numéros' },
+          { value: 1, label: '1 - Compose un petit nombre de numéros bien connus' },
+          { value: 1, label: '1 - Répond au téléphone mais ne compose pas les numéros' },
+          { value: 0, label: '0 - N\'utilise pas du tout le téléphone' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'shopping', 
+        name: 'Faire les courses', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Fait toutes les courses de façon indépendante' },
+          { value: 0, label: '0 - Fait quelques courses mais pas toutes de façon indépendante' },
+          { value: 0, label: '0 - A besoin d\'être accompagné(e) pour faire les courses' },
+          { value: 0, label: '0 - Incapable de faire les courses' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'cooking', 
+        name: 'Préparation des repas', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Planifie, prépare et sert des repas adéquats de façon indépendante' },
+          { value: 0, label: '0 - Prépare des repas adéquats si les ingrédients sont fournis' },
+          { value: 0, label: '0 - Réchauffe et sert des repas préparés ou prépare des repas inadéquats' },
+          { value: 0, label: '0 - A besoin qu\'on lui prépare et serve les repas' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'housekeeping', 
+        name: 'Entretien ménager', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Entretient la maison seul(e) ou avec une aide occasionnelle' },
+          { value: 1, label: '1 - Effectue des tâches quotidiennes légères comme faire la vaisselle, faire le lit' },
+          { value: 1, label: '1 - Effectue des tâches légères mais ne peut pas maintenir un niveau adéquat de propreté' },
+          { value: 0, label: '0 - A besoin d\'aide pour toutes les tâches d\'entretien ménager' },
+          { value: 0, label: '0 - Ne participe à aucune tâche ménagère' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'laundry', 
+        name: 'Lessive', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Fait toute sa lessive personnelle' },
+          { value: 1, label: '1 - Lave les petits articles' },
+          { value: 0, label: '0 - Toute la lessive doit être faite par d\'autres' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'transport', 
+        name: 'Mode de transport', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Voyage seul(e) en utilisant les transports en commun, le taxi, ou conduit sa propre voiture' },
+          { value: 1, label: '1 - Organise ses déplacements en taxi, mais n\'utilise pas les transports en commun' },
+          { value: 1, label: '1 - Voyage en transports en commun accompagné(e)' },
+          { value: 0, label: '0 - Déplacements limités au taxi ou à la voiture, avec assistance' },
+          { value: 0, label: '0 - Ne se déplace pas du tout' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'medication', 
+        name: 'Responsabilité pour la prise des médicaments', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Est responsable de la prise de médicaments (doses et horaires corrects)' },
+          { value: 0, label: '0 - Est responsable si les médicaments sont préparés à l\'avance en doses séparées' },
+          { value: 0, label: '0 - N\'est pas capable de prendre correctement ses médicaments' }
+        ],
+        defaultValue: 1
+      },
+      { 
+        id: 'finances', 
+        name: 'Capacité à gérer son budget', 
+        type: 'select', 
+        options: [
+          { value: 1, label: '1 - Gère ses finances de manière autonome (budget, chèques, factures, loyer, va à la banque)' },
+          { value: 1, label: '1 - Gère les achats quotidiens mais a besoin d\'aide pour la banque ou les achats importants' },
+          { value: 0, label: '0 - Incapable de gérer l\'argent' }
+        ],
+        defaultValue: 1
+      }
+    ],
+    calculation: (values: number[]): number => {
+      // Sum all values (which are 0 or 1 for each criteria)
+      return values.reduce((total, val) => total + val, 0);
+    },
+    interpretation: (score: number): ScoreInterpretation => {
+      if (score === 8) return { level: 'normal', text: 'Score 8/8: Autonomie complète pour les activités instrumentales.' };
+      if (score >= 6) return { level: 'low', text: `Score ${score}/8: Autonomie légèrement diminuée.` };
+      if (score >= 4) return { level: 'moderate', text: `Score ${score}/8: Autonomie modérément diminuée.` };
+      if (score >= 2) return { level: 'high', text: `Score ${score}/8: Autonomie sévèrement diminuée.` };
+      return { level: 'severe', text: `Score ${score}/8: Dépendance quasi-totale pour les activités instrumentales.` };
+    },
+    source: 'Lawton MP, Brody EM. Assessment of older people: self-maintaining and instrumental activities of daily living. Gerontologist. 1969;9(3):179-186.',
+    moreInfoLink: 'https://consultgeri.org/try-this/general-assessment/issue-23.pdf',
+    notes: "L'échelle IADL complète l'échelle ADL en évaluant des activités plus complexes nécessaires à l'autonomie à domicile. Le score maximal est de 8 points pour les femmes et peut être inférieur chez les hommes selon les contextes culturels (certains items peuvent être non applicables)."
+  },
+  {
     id: 'gds15',
     name: 'Échelle de Dépression Gériatrique (GDS-15)',
     shortName: 'GDS-15',
@@ -64,5 +182,32 @@ export const geriaScores: Score[] = [
     source: 'Yesavage JA, Brink TL, Rose TL, et al. Development and validation of a geriatric depression screening scale: A preliminary report. J Psychiatr Res. 1982-1983;17(1):37-49.',
     moreInfoLink: 'https://www.mdcalc.com/calc/106/geriatric-depression-scale-gds-15',
     notes: 'Chaque réponse correspondant à une humeur dépressive vaut 1 point. Un score total > 5 suggère une dépression et justifie une évaluation plus approfondie.',
+  },
+  {
+    id: 'adl_katz',
+    name: 'Indice de Katz - Activités de la Vie Quotidienne (ADL)',
+    shortName: 'ADL (Katz)',
+    category: Category.GERIA,
+    description: "Évalue le niveau de dépendance d'une personne pour les activités de base de la vie quotidienne (se laver, s'habiller, se déplacer, etc.).",
+    criteria: [
+      { id: 'bathing', name: 'Se laver (Bain / Douche)', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Prend son bain sans aide, ou avec une aide pour une seule partie du corps.' },
+      { id: 'dressing', name: 'S\'habiller', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Prend ses vêtements et s\'habille complètement sans aide.' },
+      { id: 'toileting', name: 'Aller aux toilettes', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Va aux toilettes, s\'essuie et s\'arrange sans aide.' },
+      { id: 'transferring', name: 'Se déplacer (Transfert)', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Passe du lit au fauteuil et inversement sans aide.' },
+      { id: 'continence', name: 'Continence', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Contrôle complet des sphincters urinaire et anal.' },
+      { id: 'feeding', name: 'S\'alimenter', type: 'select', options: [{ value: 1, label: 'Indépendant' }, { value: 0, label: 'Dépendant' }], defaultValue: 0, description: 'Porte la nourriture du plat à la bouche sans aide (couper la viande et beurrer le pain sont exclus).' }
+    ],
+    calculation: (values: number[]): number => {
+      return values.reduce((total, val) => total + val, 0);
+    },
+    interpretation: (score: number): ScoreInterpretation => {
+      if (score === 6) return { level: 'normal', text: `Score ${score}/6 : Indépendant pour toutes les activités.` };
+      if (score >= 3 && score <= 5) return { level: 'moderate', text: `Score ${score}/6 : Dépendance modérée.` };
+      if (score >= 0 && score <= 2) return { level: 'severe', text: `Score ${score}/6 : Dépendance sévère.` };
+      return { level: 'abnormal', text: 'Score inattendu.' };
+    },
+    source: 'Katz S, Ford AB, Moskowitz RW, Jackson BA, Jaffe MW. Studies of illness in the aged. The index of ADL: a standardized measure of biological and psychosocial function. JAMA. 1963;185:914-919.',
+    moreInfoLink: 'https://www.mdcalc.com/calc/338/katz-index-independence-activities-daily-living-adl',
+    notes: 'Un score plus bas indique un plus grand degré de dépendance. Cet indice est très utilisé en gériatrie pour évaluer l\'autonomie des patients.'
   }
 ];

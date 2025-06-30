@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Heart, Brain, Activity, MoreHorizontal, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug, FlaskConical, Baby, Bone, Ear, Eye, ShieldAlert } from 'lucide-react'; // Removed Stethoscope
+import { ArrowRight, Heart, Brain, Activity, MoreHorizontal, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug, FlaskConical, Baby, Bone, Ear, Eye, ShieldAlert, Leaf } from 'lucide-react';
 import { Score, Category } from '../data/scores_by_category';
 
 interface ScoreCardProps {
@@ -19,7 +19,7 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
   const getCategoryIcon = () => {
     switch (score.category) {
       case Category.URGENCE:
-        return <ShieldAlert className="w-5 h-5 text-blue-500" />; // Ensured ShieldAlert is used, was Stethoscope before general update
+        return <ShieldAlert className="w-5 h-5 text-blue-500" />;
       case Category.CARDIO:
         return <Heart className="w-5 h-5 text-red-500" />;
       case Category.REA:
@@ -27,13 +27,13 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
       case Category.CHIRURGIE:
         return <Scissors className="w-5 h-5 text-slate-500" />;
       case Category.PNEUMO:
-        return <AirVent className="w-5 h-5 text-cyan-500" />; // Updated icon to AirVent
+        return <AirVent className="w-5 h-5 text-cyan-500" />;
       case Category.NEURO:
         return <Brain className="w-5 h-5 text-purple-500" />;
       case Category.GASTRO:
         return <FlaskConical className="w-5 h-5 text-orange-500" />;
       case Category.INFECTO:
-        return <Bug className="w-5 h-5 text-green-500" />; // Updated icon to Bug
+        return <Bug className="w-5 h-5 text-green-500" />;
       case Category.HEMA:
         return <Droplets className="w-5 h-5 text-rose-500" />;
       case Category.NEPHRO:
@@ -59,7 +59,9 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
       case Category.ORL:
         return <Ear className="w-5 h-5 text-emerald-500" />;
       case Category.OPHTA:
-        return <Eye className="w-5 h-5 text-indigo-600" />; // Slightly different indigo
+        return <Eye className="w-5 h-5 text-indigo-600" />;
+      case Category.NUTRITION:
+        return <Leaf className="w-5 h-5 text-green-600" />;
       case Category.AUTRES:
       default:
         return <MoreHorizontal className="w-5 h-5 text-gray-500" />;
@@ -105,11 +107,13 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
       case Category.RHUMA:
         return 'bg-stone-100 text-stone-800';
       case Category.URO:
-        return 'bg-sky-100 text-sky-700'; // Slightly different text for URO
+        return 'bg-sky-200 text-sky-900';
       case Category.ORL:
         return 'bg-emerald-100 text-emerald-800';
       case Category.OPHTA:
-        return 'bg-indigo-100 text-indigo-700'; // Slightly different text for OPHTA
+        return 'bg-indigo-200 text-indigo-900';
+      case Category.NUTRITION:
+        return 'bg-green-200 text-green-900';
       case Category.AUTRES:
       default:
         return 'bg-gray-100 text-gray-800';
@@ -117,39 +121,31 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
   };
 
   return (
-    <Link to={`/score/${score.id}`} className="block hover:no-underline">
-      <div 
-        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col justify-between"
-      >
-        <div className="p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center">
+    <Link to={`/score/${score.id}`} className="block group">
+      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden h-full flex flex-col">
+        <div className="p-5 flex-grow">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">{score.name}</h3>
+              {score.shortName && <p className="text-sm text-gray-500">{score.shortName}</p>}
+            </div>
+            <div className="ml-4 flex-shrink-0">
               {getCategoryIcon()}
-              <span
-                className={`ml-2 text-sm font-medium px-2 py-1 rounded-full underline text-blue-700 cursor-pointer ${getCategoryColor()}`}
-                onClick={handleCategoryClick}
-                title={`Voir tous les scores de la catégorie ${score.category.charAt(0).toUpperCase() + score.category.slice(1)}`}
-                tabIndex={0}
-                role="button"
-                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCategoryClick(e as any)}
-              >
-                {score.category.charAt(0).toUpperCase() + score.category.slice(1)}
-              </span>
             </div>
           </div>
-          
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">{score.name}</h3>
-          
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-            {score.description}
-          </p>
-          
-          <div className="flex items-center text-blue-500 group">
-            <span className="text-sm font-medium">Calculer ce score</span>
-            <ArrowRight 
-              size={16} 
-              className="ml-1 transform group-hover:translate-x-1 transition-transform" 
-            />
+          <p className="mt-2 text-gray-600 text-sm leading-relaxed">{score.description}</p>
+        </div>
+        <div className="p-5 bg-gray-50 border-t border-gray-100">
+          <div className="flex justify-between items-center">
+            <button 
+              onClick={handleCategoryClick} 
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor()} hover:opacity-80 transition-opacity`}>
+              {score.category}
+            </button>
+            <div className="text-blue-500 group-hover:text-blue-700 flex items-center">
+              <span className="text-sm font-semibold">Calculer</span>
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
           </div>
         </div>
       </div>

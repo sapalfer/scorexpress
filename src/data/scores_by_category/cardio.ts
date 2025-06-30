@@ -5,17 +5,14 @@ import { createCalculationFunction } from '../score_helpers.ts';
 export const cardioScores: Score[] = [
   {
     id: 'chads2vasc',
-    name: 'Score CHA₂DS₂-VASc',
-    shortName: 'CHA₂DS₂-VASc',
+    name: 'Score CHA₂DS₂-VA',
+    shortName: 'CHA₂DS₂-VA',
     category: Category.CARDIO,
     description: "Évalue le risque d'AVC chez les patients atteints de fibrillation auriculaire non valvulaire.",
     referenceValues: {
-      score_0_male: 'Score 0: Risque très faible. Pas d\'antithrombotique.',
-      score_1_female: 'Score 1: Risque très faible. Pas d\'antithrombotique.',
-      score_1_male: 'Score 1: Risque faible. Envisager un traitement par AAP ou anticoagulant oral (ACO).',
-      score_2_female: 'Score 2: Risque faible. Envisager un traitement par AAP ou ACO.',
-      score_2_plus_male: 'Score ≥2: Risque modéré à élevé. Traitement par ACO recommandé.',
-      score_3_plus_female: 'Score ≥3: Risque modéré à élevé. Traitement par ACO recommandé.',
+      score_0: 'Score 0 : risque très faible – Pas d’anticoagulation.',
+      score_1: 'Score 1 : risque faible – Discuter anticoagulation orale selon le profil hémorragique.',
+      score_2_plus: 'Score ≥2 : anticoagulation orale recommandée sauf contre-indication.',
     },
     criteria: [
       { id: 'congestive_heart_failure', name: 'Insuffisance cardiaque congestive (C)', type: 'boolean', points: 1, defaultValue: false },
@@ -25,20 +22,24 @@ export const cardioScores: Score[] = [
       { id: 'stroke_tia_thromboembolism', name: 'AVC/AIT/Thromboembolie antérieurs (S₂)', type: 'boolean', points: 2, defaultValue: false },
       { id: 'vascular_disease', name: 'Maladie vasculaire (IDM, AOMI, plaque aortique) (V)', type: 'boolean', points: 1, defaultValue: false },
       { id: 'age_65_74', name: 'Âge 65-74 ans (A)', type: 'boolean', points: 1, defaultValue: false },
-      { id: 'sex_female', name: 'Sexe féminin (Sc)', type: 'boolean', points: 1, defaultValue: false },
+      { id: 'sex_female', name: 'Sexe féminin (ancien point retiré)', type: 'boolean', points: 0, defaultValue: false },
     ],
     calculation: createCalculationFunction,
     interpretation: (score: number): ScoreInterpretation => {
-      if (score === 0) return { level: 'low', text: 'Risque très faible (0.2-0.6% AVC/an). Envisager aucun traitement antithrombotique.' };
-      if (score === 1) return { level: 'low', text: 'Risque faible (0.6-1.3% AVC/an). Envisager traitement antiplaquettaire ou anticoagulant.' };
-      if (score === 2) return { level: 'moderate', text: 'Risque modéré (2.2-2.8% AVC/an). Anticoagulation orale recommandée.' };
-      if (score >= 3 && score <= 4) return { level: 'high', text: 'Risque élevé (3.2-5.9% AVC/an). Anticoagulation orale recommandée.' };
-      if (score >= 5) return { level: 'very_high', text: 'Risque très élevé (≥9.6% AVC/an). Anticoagulation orale recommandée.' };
-      return { level: 'severe', text: 'Score inattendu. Vérifier les données.' };
+      if (score === 0) {
+        return { level: 'low', text: 'Score 0 : risque très faible – Pas d’anticoagulation.' };
+      }
+      if (score === 1) {
+        return { level: 'moderate', text: 'Score 1 : risque faible – discuter anticoagulation orale selon le profil patient.' };
+      }
+      if (score >= 2) {
+        return { level: 'high', text: 'Score ≥2 : anticoagulation orale recommandée, sauf contre-indication.' };
+      }
+      return { level: 'abnormal', text: 'Score inattendu – vérifier les données.' };
     },
-    source: 'Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the Euro Heart Survey on Atrial Fibrillation. Chest. 2010 Feb;137(2):263-72.',
+    source: 'European Society of Cardiology (ESC) Practical Update 2024 – CHA₂DS₂-VA algorithm.',
     moreInfoLink: 'https://www.mdcalc.com/calc/102/chads2-vasc-score-atrial-fibrillation-stroke-risk',
-    notes: 'Score maximum de 9. Les recommandations de traitement peuvent varier selon les directives locales et le sexe du patient pour les scores bas.',
+    notes: 'Score maximum : 8 (point de sexe retiré). Recommandations 2024 : anticoagulation orale pour CHA₂DS₂-VA ≥2 quel que soit le sexe ; discuter à 1.',
   },
   {
     id: 'wells-dvt',

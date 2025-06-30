@@ -46,7 +46,10 @@ const ScoreDetail: React.FC<ScoreDetailProps> = ({ score, allScores }) => {
       </div>
       
       {scoreResult && (
-        <ScoreRecap scoreResult={scoreResult} />
+        <ScoreRecap 
+          scoreResult={scoreResult} 
+          scoreName={score.name} 
+        />
       )}
 
       {/* Related Scores Section */}

@@ -54,6 +54,7 @@ export enum Category {
   HEMA = 'Hématologie',
   NEPHRO = 'Néphrologie',
   GERIA = 'Gériatrie',
+  NUTRITION = 'Nutrition',
   GYNECO = 'Gynécologie',
   PED = 'Pédiatrie',
   PSY = 'Psychiatrie',
