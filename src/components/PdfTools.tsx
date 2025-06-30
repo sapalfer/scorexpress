@@ -5,15 +5,9 @@ import { Download, Loader } from 'lucide-react';
 
 interface PdfToolsProps {
   scoreName: string;
-  scoreValue: number;
-  interpretation: string;
 }
 
-const PdfTools: React.FC<PdfToolsProps> = ({
-  scoreName,
-  scoreValue,
-  interpretation
-}) => {
+const PdfTools: React.FC<PdfToolsProps> = ({ scoreName }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const generatePDF = async (): Promise<jsPDF | null> => {

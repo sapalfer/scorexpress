@@ -41,11 +41,7 @@ const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult, scoreName }) => {
             <Printer size={16} className="mr-2" />
             Imprimer
           </button>
-          <PdfTools 
-            scoreName={scoreName}
-            scoreValue={scoreResult.value}
-            interpretation={scoreResult.interpretation.text}
-          />
+          <PdfTools scoreName={scoreName} />
         </div>
       </div>
 
