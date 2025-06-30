@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { Download, Mail, Loader } from 'lucide-react';
+import { Download, Loader } from 'lucide-react';
 
 interface PdfToolsProps {
   scoreName: string;
@@ -75,35 +75,8 @@ const PdfTools: React.FC<PdfToolsProps> = ({
     }
   };
   
-  const handleEmailPDF = async () => {
-    setIsGenerating(true);
-    
-    try {
-      // Create email subject and body
-      const subject = `Résultat ScoreXpress: ${scoreName}`;
-      const body = `
-Bonjour,
-
-Voici le résultat de mon score médical ${scoreName}:
-
-Valeur: ${scoreValue}
-Interprétation: ${interpretation}
-
-Ce message a été envoyé depuis l'application ScoreXpress.
-      `.trim();
-      
-      // Open the default email client
-      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      
-    } catch (error) {
-      console.error('Email error:', error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  
   return (
-    <div className="flex space-x-2 no-print">
+    <div className="no-print">
       <button
         onClick={handleDownloadPDF}
         disabled={isGenerating}
@@ -120,14 +93,6 @@ Ce message a été envoyé depuis l'application ScoreXpress.
             Télécharger PDF
           </>
         )}
-      </button>
-      <button
-        onClick={handleEmailPDF}
-        disabled={isGenerating}
-        className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:bg-gray-400"
-      >
-        <Mail size={16} className="mr-2" />
-        Email
       </button>
     </div>
   );
