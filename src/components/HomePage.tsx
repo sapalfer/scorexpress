@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { getAllScores, getScoresForCategory, Score, Category } from '../data/scores_by_category';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
+import { useFavorites } from '../context/FavoritesContext';
 import ScoreCard from './ScoreCard';
 
 const SCORES_PER_PAGE = 9;
@@ -19,6 +20,8 @@ const HomePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<Score[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const { favorites } = useFavorites();
 
   // On mount, fetch ALL scores for the search functionality
   useEffect(() => {
@@ -100,7 +103,8 @@ const HomePage: React.FC = () => {
     return scoresToDisplay.filter(score => {
       const matchesSearch = score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            score.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
+      const passesFav = showFavoritesOnly ? favorites.includes(score.id) : true;
+      return matchesSearch && passesFav;
     });
   }, [scoresToDisplay, searchTerm]);
 
@@ -205,10 +209,13 @@ const HomePage: React.FC = () => {
         />
       </div>
       
-      <CategoryFilter 
-        selectedCategory={selectedCategory} 
-        setSelectedCategory={setSelectedCategory} 
-      />
+      <div className="flex flex-wrap gap-2 items-center mb-4">
+        <CategoryFilter selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+        <button
+          onClick={()=>setShowFavoritesOnly(prev=>!prev)}
+          className={`px-3 py-1 rounded-full text-sm border ${showFavoritesOnly?'bg-yellow-400 text-white':'bg-white text-gray-700'} hover:bg-yellow-300 transition-colors`}
+        >{showFavoritesOnly ? 'Tous les scores' : 'Favoris ⭐'}</button>
+      </div>
       
       {content}
 

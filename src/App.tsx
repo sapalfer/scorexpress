@@ -6,6 +6,7 @@ import CookieConsent from "react-cookie-consent"; // Added CookieConsent
 import { getAllScores, Score } from './data/scores_by_category'; // Updated import
 
 import { AppProvider } from './context/AppContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
 import ScoreDetail from './components/ScoreDetail';
@@ -215,7 +216,7 @@ function App() {
   }, []);
 
   return (
-    <AppProvider>
+    <FavoritesProvider><AppProvider>
       <BrowserRouter>
         <AppContent gaInitialized={gaConsentGiven} />
         <CookieConsent
@@ -244,7 +245,7 @@ function App() {
           </span>
         </CookieConsent>
       </BrowserRouter>
-    </AppProvider>
+    </AppProvider></FavoritesProvider>
   );
 }
 

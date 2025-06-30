@@ -1,4 +1,6 @@
 import React from 'react';
+import { Star, StarOff } from 'lucide-react';
+import { useFavorites } from '../context/FavoritesContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Heart, Brain, Activity, MoreHorizontal, AirVent, Droplets, Filter as NephroFilter, PersonStanding, BrainCog, Zap, Ribbon, Sparkles, Droplet as UroDroplet, Scissors, CakeSlice, Bug, FlaskConical, Baby, Bone, Ear, Eye, ShieldAlert, Leaf } from 'lucide-react';
 import { Score, Category } from '../data/scores_by_category';
@@ -8,6 +10,7 @@ interface ScoreCardProps {
 }
 
 const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
   const navigate = useNavigate();
 
   const handleCategoryClick = (e: React.MouseEvent) => {
@@ -129,7 +132,14 @@ const ScoreCard: React.FC<ScoreCardProps> = ({ score }) => {
               <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">{score.name}</h3>
               {score.shortName && <p className="text-sm text-gray-500">{score.shortName}</p>}
             </div>
-            <div className="ml-4 flex-shrink-0">
+            <button
+                onClick={(e)=>{e.preventDefault(); e.stopPropagation(); toggleFavorite(score.id);}}
+                className="mr-2 text-yellow-400 hover:scale-105 transition-transform"
+                aria-label="Toggle favorite"
+              >
+                {isFavorite(score.id) ? <Star className="w-5 h-5 fill-yellow-400" /> : <StarOff className="w-5 h-5" />}
+              </button>
+            <div className="flex-shrink-0">
               {getCategoryIcon()}
             </div>
           </div>
