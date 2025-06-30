@@ -47,13 +47,13 @@ const ScoreDetail: React.FC<ScoreDetailProps> = ({ score, allScores }) => {
       
       {scoreResult && (
         <ScoreRecap 
+          score={score}
           scoreResult={scoreResult} 
-          scoreName={score.name} 
         />
       )}
 
       {/* Related Scores Section */}
-      <div className="mt-10">
+      <div className="mt-10 no-print">
         <h3 className="text-lg font-semibold text-gray-800 mb-3">Autres scores dans la catégorie {score.category.charAt(0).toUpperCase() + score.category.slice(1)}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {allScores.filter(s => s.category === score.category && s.id !== score.id).slice(0, 4).map(rel => (

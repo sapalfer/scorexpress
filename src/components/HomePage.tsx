@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useFavorites } from '../context/FavoritesContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getAllScores, getScoresForCategory, Score, Category } from '../data/scores_by_category';
 import SearchBar from './SearchBar';
+import { Star } from 'lucide-react';
 import CategoryFilter from './CategoryFilter';
-import { useFavorites } from '../context/FavoritesContext';
 import ScoreCard from './ScoreCard';
 
 const SCORES_PER_PAGE = 9;
@@ -14,64 +15,36 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  const [allScoresForSearch, setAllScoresForSearch] = useState<Score[]>([]);
-  const [scoresToDisplay, setScoresToDisplay] = useState<Score[]>([]);
-  const [isLoadingScores, setIsLoadingScores] = useState(true);
+  const [allScores, setAllScores] = useState<Score[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<Score[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const { favorites } = useFavorites();
-
-  // On mount, fetch ALL scores for the search functionality
-  useEffect(() => {
-    const fetchAllScoresForSearch = async () => {
-      try {
-        const allScores = await getAllScores();
-        setAllScoresForSearch(allScores);
-      } catch (error) {
-        console.error("Failed to load all scores for search:", error);
-      }
-    };
-    fetchAllScoresForSearch();
-  }, []);
-
-  // On mount and when location changes, set category from query string
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const cat = params.get('category');
-    if (cat && Object.values(Category).includes(cat as Category)) {
-      setSelectedCategory(cat as Category);
-    } else {
-      setSelectedCategory(null);
-    }
-  }, [location.search]);
-
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch scores for display based on selected category
+  // Fetch all scores on mount and set category from URL
   useEffect(() => {
-    const fetchScores = async () => {
-      setIsLoadingScores(true);
+    const fetchAndSetScores = async () => {
+      setIsLoading(true);
       try {
-        let fetchedScores: Score[];
-        if (selectedCategory) {
-          fetchedScores = await getScoresForCategory(selectedCategory);
-        } else {
-          fetchedScores = await getAllScores();
-        }
-        setScoresToDisplay(fetchedScores);
-        setCurrentPage(1);
+        const scores = await getAllScores();
+        setAllScores(scores);
       } catch (error) {
         console.error("Failed to load scores:", error);
-        setScoresToDisplay([]);
+        setAllScores([]);
       } finally {
-        setIsLoadingScores(false);
+        setIsLoading(false);
       }
     };
 
-    fetchScores();
-  }, [selectedCategory]);
+    fetchAndSetScores();
+
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('category');
+    setSelectedCategory(cat && Object.values(Category).includes(cat as Category) ? (cat as Category) : null);
+  }, [location.search]);
 
   // Generate autocomplete suggestions
   useEffect(() => {
@@ -79,12 +52,12 @@ const HomePage: React.FC = () => {
       setSuggestions([]);
       return;
     }
-    const filtered = allScoresForSearch.filter(score =>
+    const filtered = allScores.filter(score =>
       score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (score.shortName && score.shortName.toLowerCase().includes(searchTerm.toLowerCase()))
     ).slice(0, 5);
     setSuggestions(filtered);
-  }, [searchTerm, allScoresForSearch]);
+  }, [searchTerm, allScores]);
 
   // Handle clicking outside to close suggestions
   useEffect(() => {
@@ -100,13 +73,16 @@ const HomePage: React.FC = () => {
   }, []);
 
   const filteredScores = useMemo(() => {
-    return scoresToDisplay.filter(score => {
-      const matchesSearch = score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    return allScores.filter(score => {
+      const matchesCategory = selectedCategory ? score.category === selectedCategory : true;
+      const matchesSearch = searchTerm.trim() === '' || 
+                           score.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            score.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const passesFav = showFavoritesOnly ? favorites.includes(score.id) : true;
-      return matchesSearch && passesFav;
+      const matchesFavorites = showFavoritesOnly ? favorites.includes(score.id) : true;
+      
+      return matchesCategory && matchesSearch && matchesFavorites;
     });
-  }, [scoresToDisplay, searchTerm]);
+  }, [allScores, selectedCategory, searchTerm, showFavoritesOnly, favorites]);
 
   const paginatedScores = useMemo(() => {
     const startIndex = (currentPage - 1) * SCORES_PER_PAGE;
@@ -130,14 +106,10 @@ const HomePage: React.FC = () => {
   };
 
   let content;
-  if (isLoadingScores) {
+  if (isLoading) {
     content = <div className="py-6 text-center"><p className="text-xl text-gray-700">Chargement des scores...</p></div>;
-  } else if (scoresToDisplay.length === 0 && !selectedCategory) {
-    content = <p className="text-center text-gray-500">Aucun score disponible pour le moment.</p>;
-  } else if (filteredScores.length === 0 && searchTerm !== '' && suggestions.length === 0) {
-    content = <p className="text-center text-gray-500">Aucun score trouvé pour "{searchTerm}"{selectedCategory ? ` dans la catégorie ${selectedCategory}` : ''}.</p>;
-  } else if (scoresToDisplay.length === 0 && selectedCategory) {
-    content = <p className="text-center text-gray-500">Aucun score disponible pour la catégorie {selectedCategory}.</p>;
+  } else if (filteredScores.length === 0) {
+    content = <p className="text-center text-gray-500">Aucun score ne correspond à vos critères.</p>;
   } else {
     content = (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -212,9 +184,12 @@ const HomePage: React.FC = () => {
       <div className="flex flex-wrap gap-2 items-center mb-4">
         <CategoryFilter selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         <button
-          onClick={()=>setShowFavoritesOnly(prev=>!prev)}
-          className={`px-3 py-1 rounded-full text-sm border ${showFavoritesOnly?'bg-yellow-400 text-white':'bg-white text-gray-700'} hover:bg-yellow-300 transition-colors`}
-        >{showFavoritesOnly ? 'Tous les scores' : 'Favoris ⭐'}</button>
+           onClick={()=>setShowFavoritesOnly(prev=>!prev)}
+           className={`flex items-center px-3 py-1 rounded-full border ${showFavoritesOnly ? 'bg-yellow-400 text-white' : 'bg-white text-gray-700'} hover:bg-yellow-300 transition-colors`}
+           aria-label={showFavoritesOnly ? 'Afficher tous les scores' : 'Afficher mes favoris'}
+         >
+           <Star className={`w-5 h-5 ${showFavoritesOnly ? 'fill-current' : ''}`} />
+         </button>
       </div>
       
       {content}

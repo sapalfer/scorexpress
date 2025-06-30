@@ -28,7 +28,7 @@ export const pedScores: Score[] = [
         options: [
           { value: 0, label: 'Absente (0 pts)' },
           { value: 1, label: '< 100 bpm (1 pt)' },
-          { value: 2, label: '≥ 100 bpm (2 pts)' },
+          { value: 2, label: '>= 100 bpm (2 pts)' },
         ],
         defaultValue: 2,
       },

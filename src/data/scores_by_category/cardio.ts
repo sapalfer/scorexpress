@@ -11,8 +11,8 @@ export const cardioScores: Score[] = [
     description: "Évalue le risque d'AVC chez les patients atteints de fibrillation auriculaire non valvulaire.",
     referenceValues: {
       score_0: 'Score 0 : risque très faible – Pas d’anticoagulation.',
-      score_1: 'Score 1 : risque faible – Discuter anticoagulation orale selon le profil hémorragique.',
-      score_2_plus: 'Score ≥2 : anticoagulation orale recommandée sauf contre-indication.',
+      score_1: 'Score 1 : risque faible – Discussion sur l’anticoagulation orale (en particulier si autres facteurs de risque ou patient masculin).',
+      score_2_plus: 'Score ≥2 : anticoagulation orale recommandée (seuil désormais identique pour les femmes et les hommes – ESC 2024).',
     },
     criteria: [
       { id: 'congestive_heart_failure', name: 'Insuffisance cardiaque congestive (C)', type: 'boolean', points: 1, defaultValue: false },
@@ -21,8 +21,7 @@ export const cardioScores: Score[] = [
       { id: 'diabetes_mellitus', name: 'Diabète sucré (D)', type: 'boolean', points: 1, defaultValue: false },
       { id: 'stroke_tia_thromboembolism', name: 'AVC/AIT/Thromboembolie antérieurs (S₂)', type: 'boolean', points: 2, defaultValue: false },
       { id: 'vascular_disease', name: 'Maladie vasculaire (IDM, AOMI, plaque aortique) (V)', type: 'boolean', points: 1, defaultValue: false },
-      { id: 'age_65_74', name: 'Âge 65-74 ans (A)', type: 'boolean', points: 1, defaultValue: false },
-      { id: 'sex_female', name: 'Sexe féminin (ancien point retiré)', type: 'boolean', points: 0, defaultValue: false },
+      { id: 'age_65_74', name: 'Âge 65-74 ans (A)', type: 'boolean', points: 1, defaultValue: false }
     ],
     calculation: createCalculationFunction,
     interpretation: (score: number): ScoreInterpretation => {
@@ -30,16 +29,16 @@ export const cardioScores: Score[] = [
         return { level: 'low', text: 'Score 0 : risque très faible – Pas d’anticoagulation.' };
       }
       if (score === 1) {
-        return { level: 'moderate', text: 'Score 1 : risque faible – discuter anticoagulation orale selon le profil patient.' };
+        return { level: 'moderate', text: 'Score 1 : risque faible – discuter l’anticoagulation orale selon le profil hémorragique et les préférences du patient.' };
       }
       if (score >= 2) {
-        return { level: 'high', text: 'Score ≥2 : anticoagulation orale recommandée, sauf contre-indication.' };
+        return { level: 'high', text: 'Score ≥2 : anticoagulation orale recommandée, sauf contre-indication (recommandation ESC 2024, seuil sex-neutre).' };
       }
       return { level: 'abnormal', text: 'Score inattendu – vérifier les données.' };
     },
     source: 'European Society of Cardiology (ESC) Practical Update 2024 – CHA₂DS₂-VA algorithm.',
     moreInfoLink: 'https://www.mdcalc.com/calc/102/chads2-vasc-score-atrial-fibrillation-stroke-risk',
-    notes: 'Score maximum : 8 (point de sexe retiré). Recommandations 2024 : anticoagulation orale pour CHA₂DS₂-VA ≥2 quel que soit le sexe ; discuter à 1.',
+    notes: 'Score maximum : 8 (point de sexe retiré). ESC 2024 : anticoagulation orale pour CHA₂DS₂-VA ≥ 2 quel que soit le sexe ; discussion possible à 1 en fonction du risque hémorragique.',
   },
   {
     id: 'wells-dvt',

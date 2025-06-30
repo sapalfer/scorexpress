@@ -1,14 +1,14 @@
 import React from 'react';
-import { ScoreResult } from '../types';
+import { Score, ScoreResult } from '../types';
 import { Printer } from 'lucide-react';
 import PdfTools from './PdfTools';
 
 interface ScoreRecapProps {
+  score: Score;
   scoreResult: ScoreResult;
-  scoreName: string;
 }
 
-const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult, scoreName }) => {
+const ScoreRecap: React.FC<ScoreRecapProps> = ({ score, scoreResult }) => {
 
   const getInterpretationColor = (): string => {
     const level = scoreResult.interpretation.level.toLowerCase();
@@ -23,29 +23,34 @@ const ScoreRecap: React.FC<ScoreRecapProps> = ({ scoreResult, scoreName }) => {
     window.print();
   };
 
+  // If interpretation text starts with "Grade X", display the letter instead of numeric score
+  const displayValue = React.useMemo(() => {
+    const m = /^Grade\s+([A-E])/i.exec(scoreResult.interpretation.text);
+    if (m) return m[1];
+    return scoreResult.value;
+  }, [scoreResult]);
+
   return (
-    <div className="mt-8 p-6 rounded-lg border border-gray-200">
+    <div className="mt-8 p-6 rounded-xl bg-white shadow-md ring-1 ring-gray-100">
       <h3 className="text-xl font-semibold text-gray-800 mb-4">Résultat</h3>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
         <div className="mb-4 md:mb-0">
-          <div className="text-4xl font-bold text-blue-600 mb-1">{scoreResult.value}</div>
-          <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getInterpretationColor()}`}>
+          <div className="text-4xl font-bold text-blue-600 mb-1 md:text-5xl">{displayValue}</div>
+          <div className={`inline-block px-4 py-1.5 rounded-full text-sm font-medium shadow-sm ${getInterpretationColor()}`}>
             {scoreResult.interpretation.text}
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 no-print">
+        <div className="flex flex-row items-center gap-3 ml-auto mt-2 md:mt-6 no-print">
           <button
             onClick={handlePrint}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            aria-label="Imprimer"
           >
-            <Printer size={16} className="mr-2" />
-            Imprimer
+            <Printer size={18} />
           </button>
-          <PdfTools scoreName={scoreName} />
+          <PdfTools score={score} scoreResult={scoreResult} />
         </div>
       </div>
-
-
     </div>
   );
 };

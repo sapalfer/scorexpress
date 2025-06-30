@@ -10,7 +10,7 @@ export const nutritionScores: Score[] = [
     criteria: [
       // Phénotypiques
       { id: 'phenotypic_weight_loss', name: 'Perte de poids ≥ 5% en 1 mois, ou ≥ 10% en 6 mois', type: 'boolean', points: 1, defaultValue: false },
-      { id: 'phenotypic_bmi', name: 'IMC < 18,5 kg/m²', type: 'boolean', points: 1, defaultValue: false },
+      { id: 'phenotypic_bmi', name: 'IMC < 18,5 kg/m² (ou < 21 kg/m² si âge ≥ 70 ans)', type: 'boolean', points: 1, defaultValue: false },
       { id: 'phenotypic_muscle_reduction', name: 'Réduction de la masse et/ou de la fonction musculaire', type: 'boolean', points: 1, defaultValue: false },
       // Étiologiques
       { id: 'etiologic_food_reduction', name: 'Réduction de la prise alimentaire ≥ 50% pendant > 1 sem', type: 'boolean', points: 10, defaultValue: false },
@@ -31,6 +31,6 @@ export const nutritionScores: Score[] = [
     },
     source: 'Haute Autorité de Santé (HAS) - Diagnostic de la dénutrition de l’enfant et de l’adulte - Novembre 2019',
     moreInfoLink: 'https://www.has-sante.fr/jcms/p_3152897/fr/diagnostic-de-la-denutrition-de-l-enfant-et-de-l-adulte',
-    notes: 'La sévérité est ensuite déterminée par des seuils spécifiques pour les critères phénotypiques (par exemple, IMC < 17 pour sévère). Cette calculatrice confirme le diagnostic mais ne précise pas la sévérité.'
-  },
+    notes: 'La sévérité est ensuite déterminée par des seuils spécifiques pour les critères phénotypiques : par exemple IMC < 17 (ou < 20 si ≥ 70 ans) pour dénutrition sévère. Cette calculatrice confirme le diagnostic mais ne précise pas la sévérité. Mise à jour HAS 2021 : IMC < 18,5 (< 70 ans) ou < 21 (≥ 70 ans).'
+  }
 ];
